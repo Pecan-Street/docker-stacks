@@ -40,3 +40,6 @@ RUN conda install --quiet --yes 'spylon-kernel=0.4*' && \
     rm -rf "/home/${NB_USER}/.local" && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
+
+# Pecanstreet modifications
+RUN /opt/conda/bin/pip3 install pandas matplotlib psycopg2-binary
