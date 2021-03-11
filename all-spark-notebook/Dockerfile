@@ -41,5 +41,32 @@ RUN conda install --quiet --yes 'spylon-kernel=0.4*' && \
     fix-permissions "${CONDA_DIR}" && \
     fix-permissions "/home/${NB_USER}"
 
-# Pecanstreet modifications
-RUN /opt/conda/bin/pip3 install pandas matplotlib psycopg2-binary
+### Pecanstreet modifications
+# update conda
+RUN conda update -n base conda
+RUN /opt/conda/bin/pip3 install pandas matplotlib psycopg2-binary bash_kernel
+
+# install bash kernel
+RUN python3 -m bash_kernel.install
+
+# install ijava kernel
+RUN mkdir /tmp/ijava
+WORKDIR /tmp/ijava
+COPY ijava-1.3.0.zip /tmp/ijava/ijava-1.3.0.zip
+RUN unzip /tmp/ijava/ijava-1.3.0.zip 
+RUN python3 install.py --sys-prefix 
+RUN rm -rf /tmp/ijava
+
+# c kernel
+# RUN pip3 install jupyter-c-kernel && install_c_kernel
+
+# c++ xeus kernel
+RUN conda install --yes -c conda-forge xeus-cling
+
+RUN conda update conda
+
+# javascript / nodejs cuz why not
+RUN npm install -g ijavascript && ijsinstall
+
+# return to home directory
+WORKDIR /home/jovyan
