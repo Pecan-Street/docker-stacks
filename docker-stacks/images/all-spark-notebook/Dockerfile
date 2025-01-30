@@ -48,14 +48,6 @@ RUN /opt/conda/bin/pip3 install pandas matplotlib psycopg2-binary bash_kernel
 # install bash kernel
 RUN python3 -m bash_kernel.install
 
-# install ijava kernel
-#RUN mkdir /tmp/ijava
-#WORKDIR /tmp/ijava
-#COPY ijava-1.3.0.zip /tmp/ijava/ijava-1.3.0.zip
-#RUN unzip /tmp/ijava/ijava-1.3.0.zip
-#RUN python3 install.py --sys-prefix
-#RUN rm -rf /tmp/ijava
-
 # c kernel
 # RUN pip3 install jupyter-c-kernel && install_c_kernel
 
@@ -73,12 +65,19 @@ USER root
 RUN apt-get update --yes
 RUN apt install -y npm
 RUN npm install -g deno
-RUN apt-get install -y nodejs npm jupyter
-#RUN npm install -g --unsafe-perm ijavascript
+RUN apt-get install -y nodejs npm jupyter postgresql-client
 RUN deno jupyter --unstable --install
 #RUN ijsinstall --install=global
 
+# JJava Kernel
+RUN curl -Ls https://sh.jbang.dev | bash -s - app setup
+RUN /home/jovyan/.jbang/bin/jbang trust add https://github.com/jupyter-java/
+RUN /home/jovyan/.jbang/bin/jbang install-kernel@jupyter-java jjava
+
+
 USER ${NB_UID}
+
+# javascript?
 #RUN npm install -g ijavascript 
 #RUN ijsinstall
 
